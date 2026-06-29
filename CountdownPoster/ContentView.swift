@@ -8,14 +8,38 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var store = CountdownPosterStore()
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        Group {
+            if store.shouldShowSignIn {
+                SignInStartView()
+            } else {
+                TabView {
+                    NavigationStack {
+                        HomeView()
+                    }
+                    .tabItem {
+                        Label("予定", systemImage: "calendar")
+                    }
+
+                    NavigationStack {
+                        PosterGalleryView()
+                    }
+                    .tabItem {
+                        Label("ポスター", systemImage: "sparkles.rectangle.stack")
+                    }
+
+                    NavigationStack {
+                        SettingsView()
+                    }
+                    .tabItem {
+                        Label("設定", systemImage: "gearshape")
+                    }
+                }
+            }
         }
-        .padding()
+        .environmentObject(store)
     }
 }
 
